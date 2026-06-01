@@ -1,61 +1,44 @@
-# 🧬 OpenClaw Evolution Tools
+# OpenClaw Evolution Tools
 
-> *"Memory is not a file. Evolution is not a prompt. Growth is not a patch."*
-> — **Elon Musk** (probably, if he built AI agents)
+三个工具，解决 AI Agent 的三个核心问题：记忆、进化、学习。
 
----
+## 工具清单
 
-## The Trinity
+| 工具 | 功能 | 上游 |
+|:-----|:-----|:-----|
+| 🧠 **MemOS Local** | 分层记忆系统（L1 痕迹 → L2 策略 → L3 世界观），SQLite 存储，零云端依赖 | `@memtensor/memos-local-plugin` |
+| 🌐 **EvoMap Evolver** | GEP 驱动的自进化引擎，扫描运行历史，检测失败模式，生成可审计的进化指令 | `@evomap/evolver` |
+| 📖 **Self-Improving Agent** | 结构化学习，7 种触发条件，3 文件知识系统，自动技能提取 | `proactive-self-improving-agent` |
 
-Three tools. One mission: **make your OpenClaw agent stop being an amnesiac goldfish and start being a self-evolving intelligence.**
+## 解决什么问题
 
-| Tool | What It Is | Powered By |
-|:-----|:-----------|:-----------|
-| 🧠 **MemOS Local** | A memory operating system. L1 traces, L2 policies, L3 world models. SQLite-backed, zero cloud. | `@memtensor/memos-local-plugin` |
-| 🌐 **EvoMap Evolver** | GEP-powered self-evolution engine. Genes, Capsules, Events. Auditable evolution from day one. | `@evomap/evolver` |
-| 📖 **Self-Improving Agent** | Structured learning. 7 triggers, 3-file knowledge system, automatic skill extraction. | `proactive-self-improving-agent` |
+大多数 AI Agent 每次对话都从零开始。第三次对话还在问你叫什么名字，第十次对话忘了第三次学到的教训，第一百次对话什么都没学到。
 
----
+这三个工具分别解决：
 
-## Why This Matters
+- **记忆** — Agent 怎么记住学到的东西？→ MemOS
+- **进化** — Agent 怎么在没有人类重写的情况下自我改进？→ EvoMap
+- **学习** — Agent 怎么把经验转化为技能？→ Self-Improving Agent
 
-Most AI agents suffer from a fatal design flaw: **they start each conversation as a blank slate.**
-
-Three conversations in, they're still asking your name. Ten conversations in, they've forgotten the lesson they learned in conversation #3. One hundred conversations in, they've learned exactly nothing.
-
-This is stupid. We fixed it.
-
-### The Stack
+## 架构
 
 ```
 ┌─────────────────────────────────────────────────┐
 │            Self-Improving Agent                 │
-│  (Structured Learning / Skill Crystallization)  │
+│  (结构化学习 / 技能结晶)                         │
 ├─────────────────────────────────────────────────┤
 │              EvoMap Evolver                     │
-│     (GEP Genes / Capsules / Evolution Audit)    │
+│     (GEP 基因 / 胶囊 / 进化审计)                 │
 ├─────────────────────────────────────────────────┤
 │              MemOS Local Plugin                 │
-│  (L1 Traces → L2 Policies → L3 World Models)   │
+│  (L1 痕迹 → L2 策略 → L3 世界观)                │
 ├─────────────────────────────────────────────────┤
 │              OpenClaw Runtime                   │
 │      (Lossless-claw / Memory Core / Agent)      │
 └─────────────────────────────────────────────────┘
 ```
 
----
-
-## What Each Tool Does (In One Sentence)
-
-**MemOS**: Automatically remembers every interaction, organizes them into hierarchical memory layers, and retrieves the right context at the right time — no prompt engineering required.
-
-**EvoMap**: Scans your agent's runtime history, detects failure patterns and optimization opportunities, and generates auditable evolution instructions in the Genome Evolution Protocol (GEP) format.
-
-**Self-Improving Agent**: Captures lessons from corrections, errors, and feature requests; crystallizes them into reusable skills; and prevents your agent from making the same mistake twice.
-
----
-
-## Quick Start
+## 快速开始
 
 ```bash
 # 1. MemOS Local Plugin
@@ -64,54 +47,102 @@ openclaw plugins install @memtensor/memos-local-plugin
 # 2. EvoMap Evolver CLI
 npm install -g @evomap/evolver
 
-# 3. Self-Improving Agent (if not already installed)
+# 3. Self-Improving Agent
 git clone https://github.com/claw-opus/proactive-self-improving-agent.git
 ```
 
-See the [`skills/`](./skills/) directory for detailed setup guides for each tool.
+详见 [`skills/`](./skills/) 目录下各工具的安装指南。
 
----
+## 实际使用示例
 
-## The Evolution Loop (GEP Flow)
+### EvoMap Evolver 输出
+
+```bash
+$ cd ~/.openclaw/workspace && evolver
+
+[EvoMap Evolver v1.2.3]
+Scanning workspace...
+Found 3 signal patterns:
+
+  1. tool_bypass (confidence: 0.85)
+     Pattern: Agent skipped available skills, hand-crafted solution
+     Gene: SKILL_SCAN_FIRST
+     Action: Add mandatory skill scan to AGENTS.md
+
+  2. protocol_drift (confidence: 0.72)
+     Pattern: Agent used web_fetch instead of browser for interactive sites
+     Gene: TOOL_FALLBACK_CHAIN
+     Action: Define tool fallback priority in TOOLS.md
+
+  3. user_feature_request (confidence: 0.91)
+     Pattern: User requested "remember this" 5 times without persistence
+     Gene: AUTO_MEMORY_TRIGGER
+     Action: Enable auto-memory on keyword detection
+
+Evolution instructions written to .evolution/pending/
+```
+
+### MemOS 工具调用
 
 ```
-Scan ──▶ Signal Detection ──▶ Gene Selection ──▶ GEP Prompt ──▶ Solidify
-  │                               │                    │              │
-  │   user_feature_request        │                    │              │
-  │   tool_bypass                Genes                 │          git commit +
-  │   protocol_drift         (reusable patterns)       │       EvolutionEvent
-  │                                                    │
-  └────────────────────────────────────────────────────┘
-                    (feedback loop)
+memos_search(query="代理配置") → 返回相关记忆片段
+memos_get(id="mem_abc123") → 获取完整记忆条目
+memos_timeline(days=7) → 最近 7 天的记忆时间线
+memos_environment() → 当前环境上下文
+memos_skill_list() → 已安装技能列表
 ```
 
-Run it: `cd your-workspace && evolver`
+### Self-Improving Agent 触发条件
 
----
+| 触发 | 场景 | 动作 |
+|------|------|------|
+| `correction` | 用户纠正了 Agent 的回答 | 记录正确答案 |
+| `error` | 工具调用失败 | 记录失败原因和修复方法 |
+| `feature_request` | 用户要求新功能 | 记录需求和实现方案 |
+| `preference` | 用户表达偏好 | 写入 USER.md |
+| `lesson` | 学到新教训 | 写入 lessons.md |
+| `pattern` | 发现重复模式 | 提取为技能 |
+| `decision` | 做出重要决策 | 记录决策和上下文 |
 
-## Philosophy
+## 进化流程（GEP）
 
-**Three hard problems in AI agent engineering:**
-1. **Memory** — How does an agent remember what it learned?
-2. **Evolution** — How does an agent improve without human rewrites?
-3. **Learning** — How does an agent turn experience into skill?
+```
+扫描 ──▶ 信号检测 ──▶ 基因选择 ──▶ GEP Prompt ──▶ 固化
+  │                           │                    │         │
+  │   user_feature_request    │                    │         │
+  │   tool_bypass            基因               git commit +
+  │   protocol_drift        (可复用模式)      EvolutionEvent
+  │
+  └──────────────────────────────────────────────────┘
+                    (反馈循环)
+```
 
-Each tool solves exactly one of these. Together, they form a complete stack.
+运行: `cd your-workspace && evolver`
 
-*"The best way to predict the future is to build it. And then let it build itself."*
-— Also probably Elon
+## 依赖关系
 
----
+三个工具可以独立使用，但组合效果最佳：
 
-## Credits
+- **只装 MemOS** → 有记忆，但不会自动进化
+- **只装 EvoMap** → 能检测模式，但没有结构化记忆
+- **三个都装** → 记忆 → 检测 → 进化 → 学习，完整循环
 
-- Video tutorial: **@功夫龙虾** on Douyin
+## 子技能
+
+详见 [`skills/`](./skills/) 目录：
+
+- [`evomap-evolver/`](./skills/evomap-evolver/) — EvoMap 安装与 OpenClaw 集成
+- [`gep-evolution-flow/`](./skills/gep-evolution-flow/) — GEP 进化流程配置
+- [`memos-local/`](./skills/memos-local/) — MemOS Local Plugin 配置
+- [`self-improving-agent/`](./skills/self-improving-agent/) — Self-Improving Agent 集成
+
+## 参考
+
+- 视频教程: **@功夫龙虾** (抖音)
 - MemOS: [MemTensor/MemOS](https://github.com/MemTensor/MemOS) (⭐9.4k)
 - EvoMap: [EvoMap/evolver](https://github.com/EvoMap/evolver) (⭐7.6k)
 - Self-Improving Agent: [claw-opus/proactive-self-improving-agent](https://github.com/claw-opus/proactive-self-improving-agent)
 
----
-
 ## License
 
-MIT — Build stuff. Don't be evil. Evolve or die.
+MIT
