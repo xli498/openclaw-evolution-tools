@@ -1,6 +1,6 @@
 # OpenClaw Evolution Tools
 
-OpenClaw 的自主进化工具链——记忆、演化、学习。
+OpenClaw 的记忆、演化与学习工具选型/集成参考。它不自动安装组件、不修改配置，也不提供 KAIROS、AutoDream、AutoMemory 的运行时实现。先阅读[范围与安全边界](./docs/00-范围与安全边界.md)。
 
 ## 三个工具
 
@@ -9,6 +9,11 @@ OpenClaw 的自主进化工具链——记忆、演化、学习。
 | 🧠 **MemOS Local** | 分层记忆操作系统。L1 痕迹 → L2 策略 → L3 世界模型。SQLite 存储，零云端依赖。 | `@memtensor/memos-local-plugin` |
 | 🌐 **EvoMap Evolver** | GEP 驱动的自我演化引擎。基因、胶囊、事件。可审计的演化路径。 | `@evomap/evolver` |
 | 📖 **Self-Improving Agent** | 结构化学习。7 个触发条件，3 文件知识体系，自动技能提取。 | `proactive-self-improving-agent` |
+
+## 使用前先看
+
+- [范围与安全边界](./docs/00-范围与安全边界.md)：安装、联网、重启与持续循环的边界。
+- [工具选型与冲突矩阵](./docs/01-工具选型与冲突矩阵.md)：避免多个记忆/自进化组件重复写入或重复调度。
 
 ## 为什么需要这些工具
 
@@ -52,78 +57,16 @@ git clone https://github.com/claw-opus/proactive-self-improving-agent.git
 
 详见 [`skills/`](./skills/) 目录中每个工具的配置指南。
 
-## 实际使用：KAIROS 心跳
+## 运行时能力的边界
 
-在 OpenClaw 中，演化工具每天通过 KAIROS 心跳自动运行：
+本仓库**不包含** `scripts/kairos_heartbeat.py`、`scripts/autodream.py` 或 `scripts/auto_memory.py`，因此不能把它当作这些命令的安装包或运行说明。
 
-```bash
-# 会话启动时的 KAIROS 心跳
-python3 scripts/kairos_heartbeat.py --quick
-```
+KAIROS、AutoDream、AutoMemory 仅用于说明一种设计模式：把状态巡检、记忆整理和经验提取分成可审计的独立阶段。实际实现应由当前运行时已安装的组件提供，并且必须确认：
 
-实际输出示例：
-
-```
-KAIROS Heartbeat v1.0
-──────────────────────────────────────
-Scanning environment...
-  Crontabs: 4 active jobs
-  Memory health: 23 entries, 3 outdated
-  Skills patch check: 2 skills have updates available
-  Error log: 7 entries (2 new since last check)
-  Pending tasks: 1 (openclaw-config-guide docs)
-
-Recommendation: Low confidence — no critical items
-  - 2 skills have pending updates (low priority)
-  - 1 pending task (openclaw-config-guide docs/05)
-```
-
-## 实际使用：AutoDream 记忆整理
-
-```bash
-# 检查是否需要记忆整理
-python3 scripts/autodream.py --check
-```
-
-实际输出示例：
-
-```
-AutoDream Check
-──────────────────────────────────────
-Last dream: 2025-06-01 08:00 (13.2 hours ago)
-Pending fragments: 8
-Fragment quality score: 0.45
-
-Gating checks:
-  ✅ Time gate: 13.2h > 12h threshold
-  ✅ Quantity gate: 8 > 5 threshold
-  ✅ Quality gate: 0.45 > 0.3 threshold
-
-All 3 gates passed — dream cycle recommended.
-Run: python3 scripts/autodream.py --dream
-```
-
-## 实际使用：AutoMemory 自动记忆
-
-```bash
-# 对话结束后自动提取记忆
-python3 scripts/auto_memory.py
-```
-
-实际输出示例：
-
-```
-AutoMemory Extraction
-──────────────────────────────────────
-Analyzing conversation...
-  Topics detected: MiMo degenerate loop, proxy config, HTTP headers
-  Classification:
-    [project] MiMo Degenerate Loop: root cause is reasoning=True fixed point
-    [reference] env-proxy vs explicit-proxy with undici incompatibility
-    [feedback] HTTP Header 中文字符 → ByteString 错误
-
-3 new entries ready for MEMORY.md
-```
+- 谁是唯一的记忆写入源；
+- 谁负责周期调度；
+- 是否会联网、外发或消耗额度；
+- 如何验证、停止和回滚。
 
 ## 三重门控机制
 
