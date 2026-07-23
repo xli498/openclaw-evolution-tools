@@ -1,6 +1,11 @@
 ---
-name: gep-evolution-flow
-description: GEP Evolution Flow — standardized protocol for scanning runtime history, detecting patterns, and generating auditable evolution instructions.
+name: "gep-evolution-flow"
+description: "GEP Evolution Flow — standardized protocol for scanning runtime history, detecting patterns, and generating auditable evolution instructions."
+triggers: ["需要将经验信号转成 evolution draft", "执行 GEP 审查或 promotion 流程", "审计演化对象与证据链"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-07-23
 tags: [evolution, selflearn, skill]
 ---
 

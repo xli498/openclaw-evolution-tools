@@ -1,6 +1,11 @@
 ---
-name: memos-local
-description: MemOS Local — a Memory Operating System for AI agents. Four cooperating memory layers, zero cloud dependency, automatic recall and save.
+name: "memos-local"
+description: "MemOS Local — a Memory Operating System for AI agents. Four cooperating memory layers, zero cloud dependency, automatic recall and save."
+triggers: ["设计或维护本地记忆系统", "需要分层记忆检索与持久化", "排查智能体记忆召回问题"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-07-23
 tags: [evolution, selflearn, skill]
 ---
 

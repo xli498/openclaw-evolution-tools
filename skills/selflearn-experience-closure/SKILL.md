@@ -1,6 +1,12 @@
 ---
 name: "selflearn-experience-closure"
-description: "SelfLearn 经验闭环全流程：从犯错触发 → 事件写入 → resolved 标记 → evolution draft 生成 → GEP 审查 → 人工批准 promotion → 写入永久规则。涵盖 AGENTS.md 中进化协议的全部约束和禁令。\n\nWhen to use: 当用户要求跑一遍进化流程/经验闭环时；当出错修复/用户纠正/同类错误3+次后需要沉淀经验时；当用户要求将某次经验保存为永久规则时。"
+description: "SelfLearn 经验闭环全流程：从犯错触发到人工批准 promotion，并将已验证经验写入永久规则。"
+triggers: ["出错修复后需要经验沉淀", "用户纠正后需要更新可复用规则", "同类错误三次以上需要走 GEP 闭环", "用户要求执行经验闭环"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-07-23
+tags: [evolution, selflearn, skill]
 fingerprint: "ded9b4f87e854b0d3e663f6e60b7b3f864d5333fd14e5551fe12791fff2e8a36"
 created_at: "2026-07-23T06:08:52.718Z"
 ---

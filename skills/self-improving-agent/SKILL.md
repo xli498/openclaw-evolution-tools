@@ -1,6 +1,11 @@
 ---
-name: self-improving-agent
-description: Structured learning system that captures experience, prevents repeated failures, and crystallizes knowledge into reusable skills.
+name: "self-improving-agent"
+description: "Structured learning system that captures experience, prevents repeated failures, and crystallizes knowledge into reusable skills."
+triggers: ["复盘错误并沉淀可复用规则", "构建智能体自学习流程", "避免同类失败重复发生"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-07-23
 tags: [evolution, selflearn, skill]
 ---
 

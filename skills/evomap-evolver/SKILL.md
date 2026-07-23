@@ -1,6 +1,11 @@
 ---
-name: capability-evolver
-description: GEP-powered self-evolution engine for AI agents. Scans runtime history, detects patterns, and generates auditable evolution instructions.
+name: "capability-evolver"
+description: "GEP-powered self-evolution engine for AI agents. Scans runtime history, detects patterns, and generates auditable evolution instructions."
+triggers: ["审查运行历史并提取演化信号", "生成可审计的能力演化指令", "进行 GEP 驱动的自我进化"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-05-31
 tags: [evolution, gep, self-improvement, meta]
 ---
 
