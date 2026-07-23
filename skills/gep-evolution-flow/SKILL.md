@@ -1,3 +1,9 @@
+---
+name: gep-evolution-flow
+description: GEP Evolution Flow — standardized protocol for scanning runtime history, detecting patterns, and generating auditable evolution instructions.
+tags: [evolution, selflearn, skill]
+---
+
 # GEP Evolution Flow — From Signals to Skills
 
 > *"Evolution is not optional. Adapt or die."* — EvoMap

@@ -1,3 +1,9 @@
+---
+name: memos-local
+description: MemOS Local — a Memory Operating System for AI agents. Four cooperating memory layers, zero cloud dependency, automatic recall and save.
+tags: [evolution, selflearn, skill]
+---
+
 # MemOS Local Plugin
 
 > *"Your AI agent deserves a memory, not a sticky note."*

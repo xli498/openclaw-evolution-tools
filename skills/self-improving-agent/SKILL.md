@@ -1,3 +1,9 @@
+---
+name: self-improving-agent
+description: Structured learning system that captures experience, prevents repeated failures, and crystallizes knowledge into reusable skills.
+tags: [evolution, selflearn, skill]
+---
+
 # Self-Improving Agent
 
 > *"An agent that doesn't learn from its mistakes is just a very expensive echo."*
