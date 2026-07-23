@@ -26,7 +26,7 @@ created_at: "2026-07-23T06:08:52.718Z"
 - 陷阱：evolution draft 没有 YAML frontmatter → 正确：必须包含 id/status/type/source_events/promotion_target
 
 ## Supplement
-SKILL.md 位于 ~/.openclaw/workspace/skills/selflearn-flow/SKILL.md，完整操作手册见同目录 [guide.md](./guide.md)（含6步流程、命令示例、JSON格式、GEP审查标准、审计清单）。适用场景：用户说"跑一遍进化流程"时优先读取此 skill 执行。
+完整操作手册见同目录 [guide.md](./guide.md)（含6步流程、命令示例、JSON格式、GEP审查标准、审计清单）。适用场景：用户说"跑一遍进化流程"时优先读取此 skill 执行。（含6步流程、命令示例、JSON格式、GEP审查标准、审计清单）。适用场景：用户说"跑一遍进化流程"时优先读取此 skill 执行。
 
 ## Tags
 - selflearn
