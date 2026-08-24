@@ -1,6 +1,6 @@
 ---
 name: "gep-evolution-flow"
-description: "GEP Evolution Flow — standardized protocol for scanning runtime history, detecting patterns, and generating auditable evolution instructions."
+description: "将经验信号整理为可审计的演进候选；仅生成草案，不自动安装、应用或启动后台循环。"
 triggers: ["需要将经验信号转成 evolution draft", "执行 GEP 审查或 promotion 流程", "审计演化对象与证据链"]
 dependencies: []
 version: 1.0.0
@@ -9,13 +9,11 @@ created: 2026-07-23
 tags: [evolution, selflearn, skill]
 ---
 
-# GEP Evolution Flow — From Signals to Skills
+# GEP Evolution Flow — 从信号到候选
 
-> *"Evolution is not optional. Adapt or die."* — EvoMap
+> 本文使用“Mutation / Gene / Capsule”等名称描述一个**本地候选数据模型**，不声称这是某个上游协议的当前版本或官方规范。
 
-## The GEP Protocol (v1.10.3)
-
-The Genome Evolution Protocol standardizes agent evolution into 5 objects:
+## 候选数据模型
 
 ### 0. Mutation (The Trigger)
 The reason evolution is needed. Detected from runtime signals.
@@ -73,25 +71,19 @@ A proven evolution that worked. Future evolutions reference capsules first befor
 | `log_error` | Error pattern in runtime logs |
 | `perf_bottleneck` | Performance degradation detected |
 
-## Running the Flow
+## 受控流程
 
-```bash
-# Simple scan + GEP output
-evolver
+1. 仅用脱敏、有限的历史信号生成候选；
+2. 标注证据、推断和未验证项；
+3. 人工审查候选的权限、写入范围、依赖和回滚点；
+4. 仅在得到明确批准后，通过宿主正式流程创建或应用目标 Skill；
+5. 以新会话和真实任务回归验收。
 
-# Human review before solidifying  
-evolver --review
-
-# Continuous evolution loop
-evolver --loop
-
-# With custom strategy
-EVOLVE_STRATEGY=harden evolver --loop
-```
+不要启动持续循环，不要直接执行第三方安装命令，也不要把候选当作已固化经验。
 
 ## Practical Example
 
-From our workspace run:
+示例：
 
 ```
 Signals detected:  user_feature_request, tool_bypass
@@ -100,10 +92,10 @@ Strategy:          balanced
 Outcome:           GEP prompt generated + recorded to events.jsonl
 ```
 
-The GEP prompt was then used to create a `tool-integration-pipeline` skill via `save_self_evolution_skill`, completing the full loop: **scan → gene → prompt → solidify → skill**.
+候选可被提交到人工审批流程；只有批准、正式扫描和真实任务回归都完成后，才可称为已生效。
 
 ## Limitations
 
-- `--approve` solidify only works inside the EvoMap repo (needs its validation scripts)
-- Hub features (skill store, task distribution) require [evomap.ai](https://evomap.ai) registration
-- The tool is a **prompt generator**, not an auto-patcher
+- 第三方工具的版本、许可证、联网行为和安装方法必须在使用前查阅其官方文档；
+- 本 Skill 不提供第三方 CLI 的安装、注册或后台循环命令；
+- 候选文本不是自动补丁，也不是生产变更授权。
