@@ -1,83 +1,67 @@
-# Installation Guide
+# 受控评估与迁移指南
 
-> 本文只提供上游工具的集成检查清单，不是自动安装脚本。安装插件、Skill、全局 npm 包、修改配置或重启 Gateway 前，都应先阅读[范围与安全边界](./docs/00-范围与安全边界.md)，确认影响并保留回滚路径。
+本仓库不提供可直接复制到生产环境的安装命令。记忆插件、演进工具和自学习组件会改变长期数据流、工具暴露面或运行时行为；在不了解现有实例的前提下直接安装，容易形成双写、配置遮蔽或不可验证的“已生效”。
 
-## Prerequisites
+## 适用范围
 
-- OpenClaw (any version ≥ 2026.5)
-- Node.js ≥ 18
-- Git
+在评估新的记忆、演进或自学习组件前使用本指南。它适用于：
 
-## Step 1: MemOS Local Plugin
+- 现有 OpenClaw 实例已经具备 memory、Skill、cron 或插件；
+- 需要判断是否应接入一个新的第三方组件；
+- 需要迁移、停用或验证既有组件。
 
-```bash
-# Option A: Via OpenClaw CLI (recommended)
-openclaw plugins install @memtensor/memos-local-plugin
+不适用于将本仓库的示例视为默认生产配置。
 
-# Option B: Manual install
-cd ~/.openclaw/extensions
-npm install @memtensor/memos-local-plugin
+## 受控流程
 
-# Create runtime config
-mkdir -p ~/.openclaw/memos-plugin
-cp ~/.openclaw/extensions/node_modules/@memtensor/memos-local-plugin/templates/config.openclaw.yaml \
-   ~/.openclaw/memos-plugin/config.yaml
-chmod 600 ~/.openclaw/memos-plugin/config.yaml
+### 1. 只读盘点
 
-# Register in openclaw.json:
-# openclaw gateway call config.get
-# Then patch to add: plugins.entries.memos-local-plugin = { enabled: true }
-```
+先确认当前 OpenClaw 版本、正式配置路径、已加载插件、已扫描 Skill、启用 cron，以及现有记忆的写入/检索路径。
 
-## Step 2: EvoMap Evolver
+必须回答：
 
-```bash
-# Install globally
-npm install -g @evomap/evolver
+1. 哪个组件是唯一长期记忆写入源？
+2. 新组件会不会写入同一类数据、注册重名工具，或遮蔽现有配置？
+3. 它是否需要联网、持久化用户数据、读取凭据、写配置或重启 Gateway？
+4. 出错时如何停用和回滚？
 
-# If you get EACCES:
-npm config set prefix ~/.npm-global
-export PATH="$HOME/.npm-global/bin:$PATH"
+### 2. 安全审查与确认
 
-# Verify
-evolver --help
+在安装任何 Skill 或 Plugin 前，先审查其来源、依赖、网络行为、写入范围、权限需求和配置变更。安装、公开部署、外部发送、长期自动化、修改生产配置和重启服务都应获得明确确认。
 
-# Place the SKILL.md from skills/evomap-evolver/ into your OpenClaw skills/
-```
+不要使用未核对版本的安装命令，也不要把社区文档里的字段名直接写进生产配置。
 
-## Step 3: Self-Improving Agent
+### 3. 最小隔离验证
 
-```bash
-# Via OpenClaw add
-openclaw add https://github.com/yanhongxi-openclaw/proactive-self-improving-agent
+优先在隔离环境或非生产工作区验证。验证项至少包括：
 
-# Or if you already have it
-ls ~/.openclaw/workspace/skills/proactive-agent/
-```
+- 依赖安装是否可重复；
+- 是否注册了预期工具，且没有同名冲突；
+- 是否只访问预期目录和网络端点；
+- 写入的数据是否可追溯、可检索、可删除/停用；
+- 失败时是否能恢复到接入前状态。
 
-## Step 4: 验证与受控重载
+### 4. 最小生产变更
 
-不要把重启当成安装的默认下一步。先确认插件是否真的要求重启、当前 Gateway 是否在运行，以及配置是否已备份。
+确认需要接入后，只应用一个可回滚的最小变更。优先使用当前版本的官方配置接口或局部 patch；不要覆盖整份配置，也不要把样例凭据、私有 Prompt 或用户数据写入仓库。
 
-建议的验证顺序：
+### 5. 运行态与新会话验收
 
-1. 检查插件/CLI 是否已安装；
-2. 查阅该组件当前版本的官方加载说明；
-3. 对只读功能做最小验证；
-4. 只有明确要求且已确认影响时，才使用当前 OpenClaw 推荐的重载或重启方式；
-5. 重启后重新检查会话模型、插件工具注册和日志。
+安装完成后，分别验证：
 
-`evolver --loop` 属于长期自动化，不应作为安装完成后的默认验证命令。优先使用单次或 review 模式。
+1. Gateway/插件/Skill 的实际加载状态；
+2. 目标工具的一次低风险真实调用；
+3. 新会话中的检索或触发结果；
+4. 真实任务是否遵循预期规则；
+5. 原有模型、渠道、cron 和记忆链路没有被意外改变。
 
-## Verification
+## 停用与回滚
 
-```bash
-# Check plugin status
-openclaw plugins list | grep -E "memos|evolver"
+先停止产生新写入的任务，再保留一份只读审计记录；确认没有依赖后，按当前版本官方流程停用对应组件。不要直接删除数据目录、覆盖配置或从归档恢复脚本。
 
-# Test evolver
-cd ~/.openclaw/workspace && evolver
+## 参考
 
-# Check self-improving agent
-ls ~/.openclaw/workspace/skills/proactive-agent/
-```
+- [OpenClaw 官方文档](https://docs.openclaw.ai/)
+- [仓库安全边界](./docs/00-范围与安全边界.md)
+- [工具选型与冲突矩阵](./docs/01-工具选型与冲突矩阵.md)
+- [选择与迁移路径](./docs/02-选择与迁移路径.md)
