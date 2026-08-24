@@ -1,138 +1,82 @@
-# OpenClaw Evolution Tools
+# OpenClaw 记忆与任务演进工具集
 
-OpenClaw 的记忆、演化与学习工具选型/集成参考。它不自动安装组件、不修改配置，也不提供 KAIROS、AutoDream、AutoMemory 的运行时实现。先阅读[范围与安全边界](./docs/00-范围与安全边界.md)。
+面向 OpenClaw 的记忆治理、经验沉淀和任务可靠性参考。它不是 OpenClaw 官方组件，不是“一键变聪明”安装包，也不会自动替换当前实例的记忆、Skill、模型或 cron。
 
-## 核心演化工具（4 个）
+## 先看结论
 
-| 工具 | 功能 | 基于 |
-|:-----|:-----|:-----|
-| 🧠 **MemOS Local** | 分层记忆操作系统。L1 痕迹 → L2 策略 → L3 世界模型。SQLite 存储，零云端依赖。 | `@memtensor/memos-local-plugin` |
-| 🌐 **EvoMap Evolver** | GEP 驱动的自我演化引擎。基因、胶囊、事件。可审计的演化路径。 | `@evomap/evolver` |
-| 📖 **Self-Improving Agent** | 结构化学习。7 个触发条件，3 文件知识体系，自动技能提取。 | `proactive-self-improving-agent` |
-| 🔁 **SelfLearn 经验闭环** | 犯错→事件→draft→GEP→promotion 全流程。出错修复/用户纠正后自动沉淀经验为永久规则。 | `selflearn-experience-closure` |
+- 已有结构化记忆或召回插件时，先确认唯一写入源，默认不要叠加第二套长期写入链。
+- 文件存在、Skill 已扫描或提案处于 pending，都不能单独证明功能已生效。
+- 任何记忆、自进化或自动化改动，都要经过运行态验证、新会话回归和实际任务验收。
+- 生产配置、凭据、用户数据、私有 Prompt 和敏感 payload 不进入仓库。
 
-## 运行保障 Skills（4 个）
+## 解决什么问题
 
-这些 Skills 不替代上面的核心工具；它们为模型路由、仓库维护、异步投递和定时任务提供可复用的安全与可靠性门禁。
+| 能力 | 目标 | 验收重点 |
+|:--|:--|:--|
+| 记忆治理 | 让跨会话信息可检索、可追溯、可淘汰 | 写入、检索、冲突和唯一写入源 |
+| 经验闭环 | 将错误、纠正和最佳实践变成可审查候选 | 事件记录、修复证据、人工批准和 promotion |
+| Skill 演进 | 把稳定的可复用流程沉淀为技能 | 正式扫描路径、新会话召回和实际遵循 |
+| 任务可靠性 | 建立首选路由、失败降级、结果验收和复用 | 按任务类型的真实输出验收 |
 
-| Skill | 功能 |
-|:-----|:-----|
-| 🛡️ **多 Provider 配置安全** | 多模型配置的隔离、真实推理验证、fallback 与回滚门禁。 |
-| ✅ **GitHub 仓库质量门** | 原子变更、分支迁移、内容验证与最终 SHA 对齐的 CI 验收。 |
-| 📦 **异步工件投递状态机** | 幂等键、不可变工件、pending/uncertain 状态与收件确认。 |
-| ⏱️ **定时模型故障恢复** | cron 模型故障分级、真实推理验证、最小路由修复与回滚。 |
+## 工具与现有运行时的关系
 
-## 使用前先看
+本仓库只提供选型、边界和集成参考，不自动安装组件，也不假定某个第三方记忆系统适合所有实例。使用前先确认：
 
-- [范围与安全边界](./docs/00-范围与安全边界.md)：安装、联网、重启与持续循环的边界。
-- [工具选型与冲突矩阵](./docs/01-工具选型与冲突矩阵.md)：避免多个记忆/自进化组件重复写入或重复调度。
+1. 当前 OpenClaw 版本和正式配置路径；
+2. 已启用的 memory、Skill、cron 和插件；
+3. 谁是唯一长期记忆写入源；
+4. 是否会联网、外发、写配置或消耗模型额度；
+5. 如何停止、回滚和验证。
 
-## 为什么需要这些工具
+## 推荐工作流
 
-AI Agent 通常在每次对话中从零开始。没有记忆、没有学习、没有演化。
-
-四个工具对应四类边界清晰的问题：
-1. **记忆**（MemOS）— Agent 如何存储、检索和可视化信息？
-2. **演化建议与审计**（EvoMap）— 如何从信号生成可审查的演化建议？
-3. **学习框架**（Self-Improving）— 如何将经验整理为候选知识？
-4. **经验闭环**（SelfLearn）— 如何让候选规则经过证据、GEP 和人工 promotion 后再固化？
-
-## 架构
-
-```
-┌─────────────────────────────────────────────────┐
-│            Self-Improving Agent                 │
-│  (结构化学习 / 技能结晶)                         │
-├─────────────────────────────────────────────────┤
-│              EvoMap Evolver                     │
-│     (GEP 基因 / 胶囊 / 演化审计)                │
-├─────────────────────────────────────────────────┤
-│              MemOS Local Plugin                 │
-│  (L1 痕迹 → L2 策略 → L3 世界模型)              │
-├─────────────────────────────────────────────────┤
-│              OpenClaw Runtime                   │
-│      (Lossless-claw / Memory Core / Agent)      │
-└─────────────────────────────────────────────────┘
+```text
+只读盘点 → 选择单一路由 → 最小变更 → 本地验证
+       → 运行态复核 → 新会话回归 → 实际任务验收
+       → 记录可复用规则
 ```
 
-## 选择与迁移
+### 记忆验收
 
-先读 [选择与迁移路径](./docs/02-选择与迁移路径.md)，尤其是已经运行 Celia、lossless-claw 或其他记忆层时；默认不要叠加新的长期写入链。
+不要只检查 `MEMORY.md` 或数据库文件是否存在。至少分别验证：
 
-## 快速开始
+- 新事实是否确实写入目标存储；
+- 关键词/语义检索是否能召回；
+- 新会话是否能召回；
+- 冲突和过期信息是否有处理规则；
+- 实际任务是否遵循了记忆中的约束。
 
-```bash
-# 1. MemOS Local Plugin
-openclaw plugins install @memtensor/memos-local-plugin
+### 经验与 Skill 验收
 
-# 2. EvoMap Evolver CLI
-npm install -g @evomap/evolver
+- `open`：记录错误、纠正、知识缺口或最佳实践；
+- `resolved`：写明修复方案和最小验证证据；
+- `pending`：只表示候选提案，不能表述为已生效；
+- `promoted`：必须有人工批准和目标文件/提案引用；
+- 新 Skill：必须通过正式扫描，并在新会话和真实任务中回归。
 
-# 3. Self-Improving Agent
-git clone https://github.com/claw-opus/proactive-self-improving-agent.git
+## 安全边界
 
-# 4. SelfLearn 经验闭环
-已内置于 OpenClaw 的 SelfLearn 系统和 AGENTS.md 经验闭环规则中；完整 SKILL.md 见 [`skills/selflearn-experience-closure/`](./skills/selflearn-experience-closure/)
-```
+- 不绕过受保护配置、审批、验证器或平台安全边界；
+- 不把归档脚本未经审查挂回生产 cron；
+- 不用一次子代理成功证明主会话、全新会话或长期运行已稳定；
+- 不自动发布、外发、删除或覆盖外部数据；
+- 不提交凭据、私有 Prompt、用户数据、私有 endpoint 或敏感日志。
 
-详见 [`skills/`](./skills/) 目录中每个工具的配置指南。
+## 适用与不适用
 
-## 运行时能力的边界
+**适用：** OpenClaw 记忆架构评估、Skill 选型、错误经验闭环、任务验收和迁移前审查。
 
-本仓库**不包含** `scripts/kairos_heartbeat.py`、`scripts/autodream.py` 或 `scripts/auto_memory.py`，因此不能把它当作这些命令的安装包或运行说明。
+**不适用：** 把示例当作通用安装命令、同时启用多个长期写入链、未经确认修改生产配置，或替代当前版本的官方文档。
 
-KAIROS、AutoDream、AutoMemory 仅用于说明一种设计模式：把状态巡检、记忆整理和经验提取分成可审计的独立阶段。实际实现应由当前运行时已安装的组件提供，并且必须确认：
+## 相关参考
 
-- 谁是唯一的记忆写入源；
-- 谁负责周期调度；
-- 是否会联网、外发或消耗额度；
-- 如何验证、停止和回滚。
+- [OpenClaw 官方文档](https://docs.openclaw.ai/)
+- [OpenClaw](https://github.com/openclaw/openclaw)
+- [Agent Skills 规范参考](https://github.com/anthropics/skills)
+- [OpenClaw Skills 社区索引](https://github.com/VoltAgent/awesome-openclaw-skills)
+- [Claude Mem：跨会话记忆实践](https://github.com/thedotmack/claude-mem)
+- [GBrain：常驻记忆服务实践](https://github.com/garrytan/gbrain)
 
-## 三重门控机制
-
-AutoDream 的记忆整理采用三重门控，至少 2/3 通过才执行：
-
-| 门控 | 条件 | 当前设置 |
-|------|------|----------|
-| 时间 | 距上次整理 | > 12 小时 |
-| 量级 | 待整理碎片 | > 5 条 |
-| 质量 | 碎片化程度 | > 0.3 |
-
-这个设计确保记忆整理只在累积足够有意义的内容时才执行，避免频繁的低质量整理。
-
-## GEP 演化流程
-
-```
-扫描 ──▶ 信号检测 ──▶ 基因选择 ──▶ GEP 提示 ──▶ 固化
-  │           │              │              │            │
-  │  feature  │              │              │            │
-  │  _request │          Genes              │        git commit +
-  │  bypass   │     (可复用模式)             │     EvolutionEvent
-  │  drift    │                             │
-  └──────────────────────────────────────────┘
-                 (反馈循环)
-```
-
-使用：`cd your-workspace && evolver`
-
-## 实际经验
-
-以下是基于 OpenClaw 真实部署经验的演化协议（Evolution Protocol）核心模式：
-
-1. **KAIROS 心跳** — 会话启动时扫描环境，检测值得主动处理的事项
-2. **AutoDream 记忆整理** — 空闲时压缩巩固记忆（三重门控）
-3. **AutoMemory 自动记忆** — 对话结束后自动提取值得保存的内容
-4. **Context Engineering** — 动态组装上下文（L0-L3 分层加载）
-5. **Self-Learn 自学习** — 任务完成后自动复盘，提取经验
-6. **情绪感知** — 检测用户状态，自适应调整交互方式
-
-## 参考
-
-- 视频教程：**@功夫龙虾** 抖音
-- MemOS：[MemTensor/MemOS](https://github.com/MemTensor/MemOS)
-- EvoMap：[EvoMap/evolver](https://github.com/EvoMap/evolver)
-- Self-Improving Agent：[claw-opus/proactive-self-improving-agent](https://github.com/claw-opus/proactive-self-improving-agent)
-
-## License
+## 许可证
 
 MIT
