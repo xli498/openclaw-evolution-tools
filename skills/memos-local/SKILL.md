@@ -1,6 +1,11 @@
 ---
 name: memos-local-evaluation
 description: "评估 MemOS Local 或类似本地记忆插件是否应接入现有 OpenClaw 实例；默认只读，不安装、不改配置。"
+triggers: ["评估 MemOS Local", "评估本地记忆插件"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-08-24
 ---
 
 # MemOS Local 接入评估
