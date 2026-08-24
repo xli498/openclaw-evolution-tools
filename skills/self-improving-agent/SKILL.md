@@ -1,66 +1,56 @@
 ---
-name: "self-improving-agent"
-description: "Structured learning system that captures experience, prevents repeated failures, and crystallizes knowledge into reusable skills."
-triggers: ["复盘错误并沉淀可复用规则", "构建智能体自学习流程", "避免同类失败重复发生"]
-dependencies: []
-version: 1.0.0
-author: xli498
-created: 2026-07-23
-tags: [evolution, selflearn, skill]
+name: self-improving-agent-governance
+description: "为 OpenClaw 的自学习与经验沉淀提供人工审核优先的治理规则；不自动创建或应用 Skill。"
 ---
 
-# Self-Improving Agent
+# 自学习与经验沉淀治理
 
-> *"An agent that doesn't learn from its mistakes is just a very expensive echo."*
+## 目标
 
-## What It Is
+将已验证的错误修复、用户纠正和最佳实践沉淀为可复用候选，同时避免把单次偶发问题、敏感信息或未经验证的推断自动扩散到长期记忆和生产规则中。
 
-A structured learning system that captures experience, prevents repeated failures, and crystallizes knowledge into reusable skills.
+## 事件生命周期
 
-## Features
-
-- **7 Trigger Conditions**: Error, correction, knowledge gap, better approach, capability request, task completion review, academic extension
-- **Structured Records**: LEARNINGS / ERRORS / FEATURE_REQUESTS — three-file system
-- **Experience Evolution**: Promotion mechanism (≥3 occurrences = auto-promote to skill)
-- **Safety Guards**: ADL drift prevention + VFM value-first scoring
-- **Operations Log**: JSONL-format CHANGELOG for machine-readable audit
-
-## Installation
-
-```bash
-# Via OpenClaw add
-openclaw add https://github.com/yanhongxi-openclaw/proactive-self-improving-agent
-
-# Or manual clone
-git clone https://github.com/yanhongxi-openclaw/proactive-self-improving-agent.git
+```text
+open → resolved → pending → promoted
 ```
 
-## Usage
+- `open`：记录错误、纠正、知识缺口或最佳实践，内容必须脱敏；
+- `resolved`：必须包含修复方案和最小验证证据；
+- `pending`：生成可审查候选，不代表已经生效；
+- `promoted`：仅在人工明确批准，并记录目标文件或提案引用后使用。
 
-The skill auto-loads when an agent starts. Ensure `.learnings/` exists in your workspace:
+“同类问题出现三次”只能作为是否值得整理的信号，**不是自动创建、安装、应用或发布 Skill 的触发器**。
 
-```bash
-mkdir -p .learnings
-```
+## 最小记录要求
 
-## Trigger Flow
+每条事件至少包含：
 
-```
-Error Occurred
-    │
-    ▼
-Trigger Detected ──▶ Record to ERRORS.md / LEARNINGS.md
-    │
-    ▼
-Retry Counter ≥ 3? ──▶ Yes: Auto-promote to skill extraction
-    │                       │
-    No                      ▼
-    │              Create skill in skills/<name>/
-    ▼                      
-Continue             Update CHANGELOG.jsonl
-```
+- 触发类型和发生范围；
+- 已验证的事实与不确定项；
+- 修复方案；
+- 最小验证证据；
+- 脱敏说明；
+- 是否适合推广，以及人工审核状态。
 
-## Related
+## 推广前验收
 
-- Repository: [claw-opus/proactive-self-improving-agent](https://github.com/claw-opus/proactive-self-improving-agent)
-- Also available: [lanyasheng/self-improving-agent](https://github.com/lanyasheng/self-improving-agent) (anti-loop hardened fork)
+推广为长期规则或 Skill 前，分别验证：
+
+1. 规则与现有安全边界、用户偏好和官方行为不冲突；
+2. Skill 位于正式扫描路径；
+3. 新会话能够发现或召回该规则；
+4. 同类真实任务会遵循该规则；
+5. 失败时可以停用或回滚，不污染既有记忆。
+
+## 禁止事项
+
+- 不自动从日志提取并写入敏感信息；
+- 不自动写入生产配置、全局 Prompt、用户档案或长期记忆；
+- 不自动创建、应用、安装或发布 Skill；
+- 不把文件存在、候选已生成或一次脚本成功表述为自学习已生效。
+
+## 参考
+
+- [SelfLearn 经验闭环流程](../selflearn-experience-closure/guide.md)
+- [受控评估与迁移指南](../../INSTALL.md)
