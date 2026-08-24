@@ -1,94 +1,44 @@
 ---
-name: "capability-evolver"
-description: "GEP-powered self-evolution engine for AI agents. Scans runtime history, detects patterns, and generates auditable evolution instructions."
-triggers: ["审查运行历史并提取演化信号", "生成可审计的能力演化指令", "进行 GEP 驱动的自我进化"]
-dependencies: []
-version: 1.0.0
-author: xli498
-created: 2026-05-31
-tags: [evolution, gep, self-improvement, meta]
+name: evomap-evolver-evaluation
+description: "评估 EvoMap Evolver 或类似经验演进工具的适配性；默认只读，不全局安装、不启动后台循环。"
 ---
 
-# EvoMap Evolver — OpenClaw Integration
+# EvoMap Evolver 接入评估
 
-## What It Is
+## 定位
 
-Evolver is not a code patcher. It's a **prompt generator** — a GEP-powered engine that:
+EvoMap Evolver 代表一种把任务信号归纳为可复用经验的工具路线。它不是 OpenClaw 官方能力，也不应默认获得全局安装、后台运行或生产写入权限。
 
-1. Scans your workspace for runtime logs, error patterns, and behavior signals
-2. Selects the best-matching Gene or Capsule from its built-in asset pool
-3. Emits a strict, protocol-bound GEP prompt that guides the next evolution step
-4. Records an auditable EvolutionEvent for traceability
+## 使用前必须确认
 
-## Architecture
+1. 输入信号是否包含用户数据、凭据、私有 Prompt 或敏感日志；
+2. 候选经验写入到哪里，谁可以审核，如何保留来源；
+3. 是否会与现有 Skill Workshop、记忆系统或自学习流程重复；
+4. 是否具备停用、回滚和审计能力；
+5. 是否已获得安装、长期自动化或外部发送的明确确认。
 
-```
-Agent → Proxy (localhost:19820) → EvoMap Hub
-               |
-         Local Mailbox (JSONL)
-```
+## 受控验证
 
-The Proxy handles: node registration, heartbeat, authentication, message sync, retries. The agent only reads/writes to the local mailbox.
+优先使用脱敏、有限的历史样本进行一次性离线评估。检查输出是否：
 
-## Installation
+- 可追溯到输入证据；
+- 区分事实、推断和待验证建议；
+- 不写入生产配置和长期记忆；
+- 不自动创建、应用或发布 Skill；
+- 可由人工复核和拒绝。
 
-```bash
-# Global CLI install
-npm install -g @evomap/evolver
+## 采用门槛
 
-# PATH setup (if you got EACCES)
-npm config set prefix ~/.npm-global
-export PATH="$HOME/.npm-global/bin:$PATH"
-```
+只有当它能减少真实重复工作，且不与既有流程冲突时，才提出最小接入方案。方案应写清影响范围、依赖、权限、成本、回滚点和验收标准。
 
-## Usage
+## 禁止事项
 
-### Standard mode (recommended)
-```bash
-cd your-workspace
-evolver
-```
-Outputs a GEP prompt to stdout. OpenClaw natively interprets the `sessions_spawn(...)` directives it emits.
+- 不提供未经版本核对的全局安装命令；
+- 不在后台自动循环运行；
+- 不把候选输出当作已验证经验；
+- 不自动推广或应用 Skill。
 
-### Review mode (human-in-the-loop)
-```bash
-evolver --review
-```
+## 参考
 
-### Background loop
-```bash
-evolver --loop
-```
-
-### Strategy presets
-```bash
-EVOLVE_STRATEGY=innovate evolver     # Ship features fast
-EVOLVE_STRATEGY=harden evolver       # Stability focus
-EVOLVE_STRATEGY=repair-only evolver  # Emergency fixes
-```
-
-## Environment Variables
-
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `A2A_NODE_ID` | (required) | EvoMap node identity |
-| `A2A_HUB_URL` | `https://evomap.ai` | Hub API URL |
-| `EVOMAP_PROXY` | `1` | Enable local Proxy |
-| `EVOLVE_STRATEGY` | `balanced` | Evolution strategy |
-| `EVOLVER_ROLLBACK_MODE` | `stash` | Rollback behavior |
-
-## Key Files
-
-```
-assets/gep/genes.json     — Reusable Gene definitions
-assets/gep/capsules.json  — Success capsules  
-assets/gep/events.jsonl   — Append-only evolution audit trail
-memory/                   — Evolution memory (auto-created)
-```
-
-## Limitations
-
-- **Does NOT** auto-edit source code — it generates instructions
-- **Does NOT** require internet — fully offline capable
-- Solidify (`--review --approve`) only works inside the evolver repo itself
-- Hub connection requires registering at [evomap.ai](https://evomap.ai)
+- [受控评估与迁移指南](../../INSTALL.md)
+- [OpenClaw 官方文档](https://docs.openclaw.ai/)
