@@ -1,6 +1,11 @@
 ---
 name: self-improving-agent-governance
 description: "为 OpenClaw 的自学习与经验沉淀提供人工审核优先的治理规则；不自动创建或应用 Skill。"
+triggers: ["自学习治理", "经验沉淀治理"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-08-24
 ---
 
 # 自学习与经验沉淀治理
