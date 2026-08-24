@@ -1,88 +1,44 @@
 ---
-name: "memos-local"
-description: "MemOS Local — a Memory Operating System for AI agents. Four cooperating memory layers, zero cloud dependency, automatic recall and save."
-triggers: ["设计或维护本地记忆系统", "需要分层记忆检索与持久化", "排查智能体记忆召回问题"]
-dependencies: []
-version: 1.0.0
-author: xli498
-created: 2026-07-23
-tags: [evolution, selflearn, skill]
+name: memos-local-evaluation
+description: "评估 MemOS Local 或类似本地记忆插件是否应接入现有 OpenClaw 实例；默认只读，不安装、不改配置。"
 ---
 
-# MemOS Local Plugin
+# MemOS Local 接入评估
 
-> *"Your AI agent deserves a memory, not a sticky note."*
+## 定位
 
-## What It Is
+MemOS Local 是一种本地记忆插件路线，不是 OpenClaw 的默认或必需组件。本 Skill 只用于评估和受控迁移，**不执行安装、不修改 `openclaw.json`、不重启 Gateway**。
 
-MemOS is a **Memory Operating System** for AI agents. Four cooperating memory layers, zero cloud dependency, automatic recall and save.
+如果当前实例已有长期记忆系统，先确认其是否已是唯一写入源。未经验证叠加第二套长期记忆写入链，可能造成重复写入、检索冲突、成本不可控或隐私边界不清。
 
-## Memory Layers
+## 接入前检查
 
-```
-L1 — Traces:         Step-level grounded records (action + observation + reflection)
-L2 — Policies:       Sub-task strategies induced across traces
-L3 — World Models:   Compressed environmental cognition derived from L2 + L1
-Skill —              Crystallized capabilities the agent can invoke directly
-```
+1. 核对当前 OpenClaw 版本与官方插件接口；
+2. 列出已加载插件、记忆工具和数据目录；
+3. 明确 MemOS Local 的数据目录、网络行为、依赖、工具名称和持久化策略；
+4. 检查是否会注册与现有工具重名的接口；
+5. 设计停用与回滚路径；
+6. 获得对安装、配置修改和重启的明确确认。
 
-## Installation
+## 验收标准
 
-```bash
-openclaw plugins install @memtensor/memos-local-plugin
-```
+接入后不能只以“插件已安装”或“工具可见”判断成功。至少分别验证：
 
-Or if the CLI times out:
+- 新事实写入目标存储；
+- 关键词或语义检索可召回；
+- 新会话可召回；
+- 实际任务会遵循召回结果；
+- 原有记忆、模型、渠道和定时任务未被遮蔽或破坏；
+- 可以停用并恢复到接入前行为。
 
-```bash
-cd ~/.openclaw/extensions
-npm install @memtensor/memos-local-plugin
-# Then manually add to openclaw.json:
-# plugins.entries.memos-local-plugin = { enabled: true }
-```
+## 不做什么
 
-## Configuration
+- 不默认推荐安装 MemOS Local；
+- 不提供未经版本核对的包名、安装命令或配置字段；
+- 不提交用户数据、凭据、私有 Prompt 或敏感日志；
+- 不把一次调用成功表述为长期记忆已稳定。
 
-Runtime data lives at `~/.openclaw/memos-plugin/config.yaml`:
+## 参考
 
-```yaml
-viewer:
-  port: 18799
-
-embedding:
-  provider: local        # No API key needed
-
-llm:
-  provider: host         # Uses host's LLM
-
-algorithm:
-  lightweightMemory:
-    enabled: true        # Low-cost summaries; set false for full evolution
-
-hub:
-  enabled: false
-```
-
-## Tools
-
-After gateway restart, the plugin exposes 6 tools:
-
-| Tool | Purpose |
-|------|---------|
-| `memos_search` | Free-text memory search across 3 tiers |
-| `memos_get` | Get specific memory by ID |
-| `memos_timeline` | Timeline view of memories |
-| `memos_environment` | Environment/context info |
-| `memos_skill_list` | List crystallized skills |
-| `memos_skill_get` | Get skill details |
-
-## Viewer
-
-After the plugin loads, visit `http://localhost:18799` for the Memory Viewer SPA.
-
-## Research
-
-- Paper: [arXiv:2507.03724](https://arxiv.org/abs/2507.03724)
-- +43.70% accuracy vs OpenAI Memory
-- Saves 35.24% memory tokens
-- Docs: [memos-docs.openmem.net](https://memos-docs.openmem.net)
+- [OpenClaw 官方文档](https://docs.openclaw.ai/)
+- [受控评估与迁移指南](../../INSTALL.md)
