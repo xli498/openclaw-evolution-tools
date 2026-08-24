@@ -1,6 +1,11 @@
 ---
 name: evomap-evolver-evaluation
 description: "评估 EvoMap Evolver 或类似经验演进工具的适配性；默认只读，不全局安装、不启动后台循环。"
+triggers: ["评估经验演进工具", "评估 EvoMap Evolver"]
+dependencies: []
+version: 1.0.0
+author: xli498
+created: 2026-08-24
 ---
 
 # EvoMap Evolver 接入评估
