@@ -79,7 +79,7 @@
 
 ## Skill 清单
 
-仓库中的 Skill 全部是受控评估或治理参考：`async-artifact-delivery-state-machine`、`evomap-evolver`、`gep-evolution-flow`、`github-repo-quality-gate`、`memos-local`、`multi-provider-config-safety`、`reliable-task-execution`、`self-improving-agent`、`selflearn-experience-closure`。它们不构成安装指令，也不会自动创建、应用或发布 Skill。
+仓库中的 Skill 全部是受控评估或治理参考：`async-artifact-delivery-state-machine`、`evomap-evolver`、`gep-evolution-flow`、`github-repo-quality-gate`、`memos-local`、`multi-provider-config-safety`、`scheduled-model-failure-recovery`、`self-improving-agent`、`selflearn-experience-closure`。它们不构成安装指令，也不会自动创建、应用或发布 Skill。
 
 ## 许可证
 
