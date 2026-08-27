@@ -1,20 +1,10 @@
 ---
 name: "selflearn-experience-closure"
-description: "SelfLearn 经验闭环全流程：从犯错触发到人工批准 promotion，并将已验证经验写入永久规则。"
-triggers: ["出错修复后需要经验沉淀", "用户纠正后需要更新可复用规则", "同类错误三次以上需要走 GEP 闭环", "用户要求执行经验闭环"]
-dependencies: []
+description: "SelfLearn 经验闭环全流程：从犯错触发到人工批准 promotion，并将已验证经验写入永久规则。当出错修复后需要经验沉淀、用户纠正后需要更新可复用规则、同类错误多次出现需要走 GEP 闭环、或用户要求执行经验闭环时使用。"
 version: 1.0.0
-author: xli498
-created: 2026-07-23
-tags: [evolution, selflearn, skill]
-fingerprint: "ded9b4f87e854b0d3e663f6e60b7b3f864d5333fd14e5551fe12791fff2e8a36"
-created_at: "2026-07-23T06:08:52.718Z"
 ---
 
 # selflearn-experience-closure
-
-## Metadata
-- Created At: 2026-07-23T06:08:52.718Z
 
 ## Rules
 - 触发条件：工具>5次/出错修复/用户纠正/新路径/同类3+次

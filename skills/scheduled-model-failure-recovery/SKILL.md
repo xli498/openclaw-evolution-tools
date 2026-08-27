@@ -1,12 +1,7 @@
 ---
 name: "scheduled-model-failure-recovery"
-description: "Diagnose and safely recover scheduled AI jobs when model routes fail. Separates transient upstream errors, credential failures, discovery-only access, runtime overrides, and job-specific model pins; preserves job payloads and verifies real generation before declaring recovery."
-triggers: ["定时任务模型调用失败", "cron 出现 5xx 或 timeout", "模型列表可见但实际推理失败", "切换默认模型后任务仍失败", "排查 session、agent 或 job 的模型路由差异"]
-dependencies: []
+description: "Diagnose and safely recover scheduled AI jobs when model routes fail. Separates transient upstream errors, credential failures, discovery-only access, runtime overrides, and job-specific model pins; preserves job payloads and verifies real generation before declaring recovery. Use when scheduled model calls fail with 5xx or timeout, model lists work but inference fails, jobs keep failing after a default-model switch, or session/agent/job model routing differences need investigation."
 version: "1.0.0"
-author: "xli498"
-created: "2026-07-23"
-tags: ["scheduling", "model-routing", "cron", "recovery", "reliability"]
 ---
 
 # Scheduled Model Failure Recovery

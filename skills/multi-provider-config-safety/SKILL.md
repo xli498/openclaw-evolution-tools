@@ -1,12 +1,7 @@
 ---
 name: "multi-provider-config-safety"
-description: "Safely audit, add, or change multi-provider AI model configuration. Verifies provider isolation, agent-level model registration, real inference access, fallback behavior, and rollback evidence without exposing credentials."
-triggers: ["新增或修改 AI provider", "切换默认模型或 fallback", "模型能列出但推理失败", "排查 provider 配置覆盖或路由异常"]
-dependencies: []
+description: "Safely audit, add, or change multi-provider AI model configuration. Verifies provider isolation, agent-level model registration, real inference access, fallback behavior, and rollback evidence without exposing credentials. Use when adding or changing AI providers, switching default models or fallback, diagnosing models that list but fail inference, or troubleshooting provider configuration overrides."
 version: "1.0.0"
-author: "xli498"
-created: "2026-07-23"
-tags: ["openclaw", "provider", "model-routing", "configuration", "safety"]
 ---
 
 # Multi-Provider Configuration Safety

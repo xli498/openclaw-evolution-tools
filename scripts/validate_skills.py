@@ -2,11 +2,14 @@
 """Dependency-free validation for OpenClaw SKILL.md files."""
 from __future__ import annotations
 import json, re, sys
-from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = ("name", "description", "triggers", "dependencies", "version", "author", "created")
+REQUIRED = ("name", "description")
+# OpenClaw / Agent Skills 官方 frontmatter 只认 name / description / version；
+# 这些历史字段已在规范对齐中移除，出现即视为回归。
+NON_STANDARD = ("triggers", "dependencies", "author", "created", "tags", "fingerprint", "created_at")
+NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$")
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 
@@ -36,14 +39,15 @@ def main():
             errors.append(f"{tag}: {exc}"); continue
         for key in REQUIRED:
             if key not in meta or meta[key] in ("", None): errors.append(f"{tag}: missing {key}")
+        for key in NON_STANDARD:
+            if key in meta: errors.append(f"{tag}: non-standard frontmatter field '{key}' (official schema: name/description/version)")
         if isinstance(meta.get("name"), str):
             if meta["name"] in names: errors.append(f"{tag}: duplicate name {meta['name']}")
             names.add(meta["name"])
-        if not isinstance(meta.get("triggers"), list) or not meta.get("triggers"): errors.append(f"{tag}: triggers must be a non-empty JSON/YAML list")
-        if not isinstance(meta.get("dependencies"), list): errors.append(f"{tag}: dependencies must be a list")
-        if not isinstance(meta.get("version"), str) or not SEMVER.match(meta["version"]): errors.append(f"{tag}: version must be SemVer")
-        try: date.fromisoformat(str(meta.get("created")))
-        except ValueError: errors.append(f"{tag}: created must be ISO date YYYY-MM-DD")
+            if not NAME_RE.match(meta["name"]): errors.append(f"{tag}: name must be lowercase kebab-case")
+            if meta["name"] != path.parent.name: errors.append(f"{tag}: name {meta['name']!r} does not match directory {path.parent.name!r}")
+        if not isinstance(meta.get("description"), str) or not meta.get("description", "").strip(): errors.append(f"{tag}: description must be a non-empty string")
+        if "version" in meta and (not isinstance(meta["version"], str) or not SEMVER.match(meta["version"])): errors.append(f"{tag}: version must be SemVer")
         for target in LINK.findall(body):
             if target.startswith(("http://", "https://", "mailto:", "#")): continue
             target = target.split("#", 1)[0]

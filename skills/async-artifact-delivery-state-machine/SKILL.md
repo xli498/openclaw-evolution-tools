@@ -1,12 +1,7 @@
 ---
 name: "async-artifact-delivery-state-machine"
-description: "Reliably deliver generated files or messages across asynchronous channels using idempotency keys, immutable artifacts, explicit delivery states, uncertainty handling, and user-level receipt confirmation."
-triggers: ["生成了文件但需要可靠投递", "附件投递失败或会话失效", "需要避免重复发送", "用户反馈没有收到文件", "设计跨渠道异步交付流程"]
-dependencies: []
+description: "Reliably deliver generated files or messages across asynchronous channels using idempotency keys, immutable artifacts, explicit delivery states, uncertainty handling, and user-level receipt confirmation. Use when generated files need reliable delivery, delivery fails or sessions expire, duplicate sends must be avoided, users report missing files, or cross-channel async delivery flows are being designed."
 version: "1.0.0"
-author: "xli498"
-created: "2026-07-23"
-tags: ["delivery", "artifact", "idempotency", "reliability", "async"]
 ---
 
 # Async Artifact Delivery State Machine

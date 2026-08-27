@@ -1,12 +1,7 @@
 ---
 name: "github-repo-quality-gate"
-description: "Safely improve and verify a public GitHub repository: inspect current state, make atomic changes, protect branches and history, validate content locally, and require GitHub Actions success on the exact final commit."
-triggers: ["审查或改善 GitHub 仓库", "补 LICENSE、分支迁移或 Skill 标准化", "新增 GitHub Actions 质量门禁", "确认 GitHub CI 报错是否已经修复"]
-dependencies: ["GitHub CLI or GitHub REST API access"]
+description: "Safely improve and verify a public GitHub repository: inspect current state, make atomic changes, protect branches and history, validate content locally, and require GitHub Actions success on the exact final commit. Use when reviewing or improving a GitHub repo, adding LICENSE, migrating branches, standardizing Skills, adding quality-gate workflows, or confirming CI failures are fixed."
 version: "1.0.0"
-author: "xli498"
-created: "2026-07-23"
-tags: ["github", "quality-gate", "ci", "documentation", "skills"]
 ---
 
 # GitHub Repository Quality Gate
@@ -53,28 +48,24 @@ Do not add boilerplate that has no repository-specific value.
 
 ### 3. Standardize reusable Skills when present
 
-For each `skills/<name>/SKILL.md`, validate a stable frontmatter contract:
+For each `skills/<name>/SKILL.md`, validate a stable frontmatter contract based on the official OpenClaw / Agent Skills schema (`name`, `description`, `version`):
 
 ```yaml
 ---
-name: "unique-skill-name"
-description: "one-line purpose"
-triggers: ["real user intent"]
-dependencies: []
+name: "unique-kebab-case-skill-name"
+description: "one-line purpose including when to use the skill"
 version: "1.0.0"
-author: "maintainer"
-created: "YYYY-MM-DD"
 ---
 ```
 
 Then validate:
 
-- required fields exist and have correct types;
-- skill names are unique;
+- required fields (`name`, `description`) exist and have correct types;
+- `version`, when present, is valid SemVer;
+- skill names are unique, lowercase kebab-case, and match their directory name;
+- non-standard legacy fields (e.g. `triggers`, `dependencies`, `author`, `created`, `tags`) are not reintroduced;
 - relative Markdown links resolve;
 - documentation pages are not silently used as a replacement for `SKILL.md`.
-
-Legacy metadata can remain only when it does not conflict with the normalized fields.
 
 ### 4. Build tests from real behavior, not README promises
 
