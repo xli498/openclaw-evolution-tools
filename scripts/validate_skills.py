@@ -13,6 +13,14 @@ NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$")
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 
+def resolve_repo_target(source: Path, target: str):
+    resolved = (source.parent / target).resolve()
+    try:
+        resolved.relative_to(ROOT)
+    except ValueError:
+        return None
+    return resolved
+
 def parse_frontmatter(path: Path):
     lines = path.read_text(encoding="utf-8").splitlines()
     if not lines or lines[0] != "---": raise ValueError("frontmatter must start on line 1")
@@ -49,9 +57,12 @@ def main():
         if not isinstance(meta.get("description"), str) or not meta.get("description", "").strip(): errors.append(f"{tag}: description must be a non-empty string")
         if "version" in meta and (not isinstance(meta["version"], str) or not SEMVER.match(meta["version"])): errors.append(f"{tag}: version must be SemVer")
         for target in LINK.findall(body):
-            if target.startswith(("http://", "https://", "mailto:", "#")): continue
+            if target.startswith(("http://", "https://", "//", "mailto:", "#")): continue
             target = target.split("#", 1)[0]
-            if target and not (path.parent / target).resolve().exists(): errors.append(f"{tag}: broken relative link {target}")
+            if not target: continue
+            resolved = resolve_repo_target(path, target)
+            if resolved is None: errors.append(f"{tag}: link escapes repository {target}")
+            elif not resolved.exists(): errors.append(f"{tag}: broken relative link {target}")
     if errors:
         print("SKILL validation failed:", *[f"- {e}" for e in errors], sep="\n")
         return 1
