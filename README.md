@@ -74,6 +74,8 @@
 - [OpenClaw](https://github.com/openclaw/openclaw)
 - [Agent Skills 规范参考](https://github.com/anthropics/skills)
 - [OpenClaw Skills 社区索引](https://github.com/VoltAgent/awesome-openclaw-skills)
+- [EvoMap Evolver（本仓库评估对象之一）](https://github.com/EvoMap/evolver) · npm: [@evomap/evolver](https://www.npmjs.com/package/@evomap/evolver)
+- [MemOS（本仓库评估对象之一）](https://github.com/MemTensor/MemOS) · 插件文档: [memos-claw.openmem.net](https://memos-claw.openmem.net/docs/index.html)
 - [Claude Mem：跨会话记忆实践](https://github.com/thedotmack/claude-mem)
 - [GBrain：常驻记忆服务实践](https://github.com/garrytan/gbrain)
 

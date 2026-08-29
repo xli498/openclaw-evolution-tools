@@ -29,7 +29,19 @@ A single occurrence is normally recorded and tracked. Promote a recurring patter
 
 ### 3. Create a reviewable draft
 
-Write candidates to `memory/evolution-drafts/pending/`. The draft must state:
+Write candidates to `memory/evolution-drafts/pending/`. Each draft is a Markdown file with a YAML frontmatter header followed by a structured body — this is the single authoritative draft contract:
+
+```yaml
+# frontmatter（创建时必填）
+---
+id: draft_<timestamp>          # 稳定唯一 ID
+status: pending                # pending → promoted（仅经人工批准）
+type: error | correction | best_practice | knowledge_gap | feature_request
+source_events: [ "<event-id>", ... ]  # 指向 events.jsonl 中的来源事件
+---
+```
+
+Body 必须写清：
 
 - the trigger and intended use;
 - exact guardrails and non-goals;
@@ -37,11 +49,21 @@ Write candidates to `memory/evolution-drafts/pending/`. The draft must state:
 - affected files or Skills;
 - rollback or rejection path.
 
+`promotion_target` 与 `promotion_ref` 不在创建时填写：它们在人工批准后按第 5 步回写到来源事件，避免草案预设晋升去向。
+
 The draft is pending until an authorized human review approves it. A pending file is not an installed Skill and is not proof of behavioral adoption.
 
-### 4. Promotion boundary
+### 4. Promotion boundary and GEP review criteria
 
-Promotion requires explicit human approval and a traceable target. Approved changes must be made through the formal Skill/workflow process, then verified through:
+Promotion requires explicit human approval and a traceable target. GEP 审查（见 [gep-evolution-flow](../gep-evolution-flow/SKILL.md)）在批准前逐项核对：
+
+1. 证据可追溯：draft 的每项主张都能回链到 source_events 中的脱敏证据；
+2. 范围明确：写清影响文件/Skill、非目标（non-goals）与爆炸半径；
+3. 无敏感内容：不含凭据、私有 Prompt、个人数据或未脱敏命令；
+4. 可回滚：给出拒绝/回滚路径与验证命令；
+5. 权限最小：不要求超出目标文件范围的写入或执行权限。
+
+Approved changes must be made through the formal Skill/workflow process, then verified through:
 
 1. the formal scan path;
 2. a clean-session recall or invocation check;
@@ -53,7 +75,7 @@ After an approved promotion, update the source event with `promotion_target` and
 
 ### 6. Prohibitions
 
-- Do not send raw error noise, keys, or full sensitive commands to AutoMemory.
+- Do not send raw error noise, keys, or full sensitive commands to AutoMemory (if deployed).
 - Do not automatically write `AGENTS.md`, `TOOLS.md`, or `USER.md`.
 - Do not automatically approve or delete drafts.
 - Do not let SelfLearn promote its own output without human approval.
